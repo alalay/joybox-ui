@@ -1,5 +1,5 @@
 import React from "react";
-import { {{headCaps name}} } from "./index";
+import { Carousel } from "./index";
 import {
 	withKnobs,
 	text,
@@ -9,8 +9,8 @@ import {
 } from "@storybook/addon-knobs";
 
 export default {
-	title: "{{headCaps name}}",
-	component: {{headCaps name}},
+	title: "Carousel",
+	component: Carousel,
 	decorators: [withKnobs],
 };
 
