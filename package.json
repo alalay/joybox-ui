@@ -26,6 +26,10 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "np": {
+    "no-tests": true,
+    "non-interactive": false
+  },
   "jest": {
     "collectCoverageFrom": [
       "!src/**/*.stories.tsx",
