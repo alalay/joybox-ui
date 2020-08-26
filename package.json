@@ -89,6 +89,6 @@
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/alalay888"
+    "registry": "https://npm.pkg.github.com/@alalay"
   }
 }
