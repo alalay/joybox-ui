@@ -1,6 +1,6 @@
 {
   "name": "@alalay/joybox-ui",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": false,
   "repository": "https://github.com/alalay/joybox-ui",
   "dependencies": {
