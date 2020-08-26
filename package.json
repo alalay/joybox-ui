@@ -24,7 +24,7 @@
     "build-storybook": "build-storybook --no-dll --quiet",
     "coverage": "react-scripts test --coverage --watchAll=false",
     "coverall": "npm run coverage  && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "publish": "npx np --no-tests"
+    "release": "npx np --no-tests"
   },
   "eslintConfig": {
     "extends": "react-app"
