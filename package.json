@@ -28,7 +28,8 @@
   },
   "np": {
     "yarn": false,
-    "non-interactive": false
+    "non-interactive": false,
+    "cleanup": false
   },
   "jest": {
     "collectCoverageFrom": [
