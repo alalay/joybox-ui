@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, HTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 import { color, typography } from "../shared/styles";
 import { glow } from "../shared/animation";
@@ -114,7 +114,7 @@ interface a11yProps {
 export function Avatar(props: AvatarProps) {
 	const { isLoading, src, username, size } = props;
 	const avatarFigure = useMemo(() => {
-		let avatarFigure = <Icon icon="useralt" />;
+		let avatarFigure = <Icon icon="useralt" data-testid="avator-svg" />;
 		const a11yProps: a11yProps = {};
 		if (isLoading) {
 			a11yProps["aria-busy"] = true;
@@ -126,7 +126,7 @@ export function Avatar(props: AvatarProps) {
 		} else {
 			a11yProps["aria-label"] = username!;
 			avatarFigure = (
-				<Initial size={size} aria-hidden="true">
+				<Initial size={size} aria-hidden="true" data-testid="avatar-username">
 					{username!.substring(0, 1)}
 				</Initial>
 			);

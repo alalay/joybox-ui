@@ -4,9 +4,9 @@ import { Icon, IconProps } from "../index";
 import { icons } from "../../shared/icons";
 
 function IconTest(icon: IconProps["icon"]) {
-	const wrapper = render(<Icon icon={icon} data-testid="icon-path"></Icon>);
-	const path = wrapper.queryByTestId("icon-path");
-	expect(path).toHaveAttribute("d", icons.mobile);
+	const {container} = render(<Icon icon={icon} data-testid="icon-path"></Icon>);
+	const path = container.querySelector("path");
+	expect(path).toHaveAttribute("d", icons[icon]);
 	cleanup();
 }
 

@@ -10,9 +10,10 @@ describe("test Avatar component", () => {
 		expect(div).toBeInTheDocument();
 		let username = wrapper.getByText("l");
 		expect(username).toBeTruthy();
+		cleanup();
 	});
 	it("it should render correct size", () => {
-		let wrapper = render(<Avatar data-testid="avatar-username"></Avatar>);
+		let wrapper = render(<Avatar></Avatar>);
 		let div = wrapper.getByTestId("avatar-div");
 		expect(div).toHaveStyle(`height:${AvatarSize.medium}px`);
 		expect(div).toHaveStyle(`width:${AvatarSize.medium}px`);
@@ -52,18 +53,20 @@ describe("test Avatar component", () => {
 		expect(div).toHaveStyle(`line-height:${AvatarSize.medium}px`);
 		username = wrapper.getByTestId("avatar-username");
 		expect(username).toHaveStyle(`line-height:${AvatarSize.medium}px`);
+		cleanup();
 	});
 	it("should correct loading", () => {
-		let wrapper = render(<Avatar isLoading data-testid="icon-svg"></Avatar>);
+		let wrapper = render(<Avatar isLoading></Avatar>);
 		expect(wrapper).toMatchSnapshot();
-		let svg = wrapper.getByTestId("icon-svg");
+		let svg = wrapper.getByTestId("avator-svg");
 		expect(svg).toBeVisible();
 		cleanup();
 		wrapper = render(
-			<Avatar isLoading username="123" src="/" size="tiny" data-testid="icon-svg"></Avatar>
+			<Avatar isLoading username="123" src="/" size="tiny"></Avatar>
 		);
-		svg = wrapper.getByTestId("icon-svg");
+		svg = wrapper.getByTestId("avator-svg");
 		expect(svg).toBeVisible();
+		cleanup();
 	});
 	it("should correct img", () => {
 		let wrapper = render(<Avatar src="www.test.com" data-testid="avatar-img"></Avatar>);
@@ -79,6 +82,7 @@ describe("test Avatar component", () => {
 		img = wrapper.getByTestId("avatar-img");
 		expect(img).toHaveAttribute("src", "www.yehuozhili.xyz");
 		expect(img).toHaveAttribute("alt", "yehuozhili");
+		cleanup();
 	});
 	it("should render correct username", () => {
 		let wrapper = render(<Avatar username="yehuozhili" data-testid="avatar-div"></Avatar>);
@@ -91,5 +95,6 @@ describe("test Avatar component", () => {
 		wrapper = render(<Avatar username="中文汉字"></Avatar>);
 		username = wrapper.getByText("中");
 		expect(username).toBeTruthy();
+		cleanup();
 	});
 });
