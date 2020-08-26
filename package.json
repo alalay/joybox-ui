@@ -15,7 +15,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "tsc -p tsconfig.build.json",
+    "build-cjs": "microbundle build --tsconfig tsconfig.build.json --jsx React.createElement  --compress=false --format cjs",
+    "build-all": "microbundle build --tsconfig tsconfig.build.json --jsx React.createElement --compress=false",
+    "build": "npm run build-all && npm run build-cjs",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
@@ -74,6 +76,7 @@
     "babel-loader": "^8.1.0",
     "coveralls": "^3.1.0",
     "jest-styled-components": "^7.0.3",
+    "microbundle": "^0.12.3",
     "np": "^6.4.0",
     "plop": "^2.7.4",
     "react": "^16.13.1",
@@ -85,7 +88,8 @@
   "files": [
     "dist"
   ],
-  "module": "dist/index.js",
+  "main": "dist/joybox-ui.js",
+  "module": "dist/joybox-ui.modern.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "publishConfig": {
