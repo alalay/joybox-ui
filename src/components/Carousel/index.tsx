@@ -6,11 +6,21 @@ import React, {
   useEffect,
   ReactElement,
   useState,
+  TouchEvent,
 } from "react";
 import styled from "styled-components";
 import { Radio } from "../Radio";
+import { color } from "../shared/styles";
 
-const Transition = styled.div<AnimationType>`
+
+interface AnimationType {
+  animatein: boolean;
+  direction: "" | "left" | "right";
+}
+interface TransitionType extends AnimationType {
+  delay: number;
+}
+const Transition = styled.div<TransitionType>`
 	${props =>
     !props.animatein &&
     props.direction === "left" &&
@@ -29,27 +39,35 @@ const Transition = styled.div<AnimationType>`
     props.direction === "left" &&
     `
 		transform: translateX(0);
-			transition: all 1s ease;
+			transition: all ${props.delay / 1000}s ease;
 		`}
 	${props =>
     props.animatein &&
     props.direction === "right" &&
     `
 		transform: translateX(0);
-		transition: all 1s ease;
+		transition: all ${props.delay / 1000}s ease;
 		`}
 `;
 type CarouselProps = {
-	/** 默认索引*/
-	defaultIndex?: number;
-	/** 轮播图高度 */
-	height?: number;
-	/** 是否自动播放 */
-	autoplay: boolean;
-	/** 自动播放延迟 */
-	autoplayDelay: number;
-	/** 翻页动画延迟 */
-	delay?: number;
+  /** 默认索引*/
+  defaultIndex?: number;
+  /** 轮播图高度 */
+  height?: number;
+  /** 是否自动播放 */
+  autoplay: boolean;
+  /** 自动播放延迟 */
+  autoplayDelay: number;
+  /** 翻页动画延迟 */
+  delay?: number;
+  /** 动画速度 1000是1秒 */
+  animationDelay?: number;
+  /**自动播放时是否反向播放 */
+  autoplayReverse?: boolean;
+  /** radio color */
+  radioAppear?: keyof typeof color;
+  /** touch diff */
+  touchDiff?: number;
 };
 
 function currentSetMap(
@@ -83,13 +101,42 @@ function mapToState(
     });
   }
 }
-interface AnimationType {
-  animatein: boolean;
-  direction: "" | "left" | "right";
+function toMove(
+  right: boolean,
+  totalLen: number,
+  indexMap: [number, number, number],
+  setIndexMap: React.Dispatch<React.SetStateAction<[number, number, number]>>
+) {
+  let y;
+  if (right) {
+    if (indexMap[1] < totalLen - 1) {
+      y = indexMap[1] + 1;
+    } else {
+      y = 0;
+    }
+  } else {
+    if (indexMap[1] === 0) {
+      y = totalLen - 1;
+    } else {
+      y = indexMap[1] - 1;
+    }
+  }
+  setIndexMap(currentSetMap(y, indexMap));
 }
 
 export function Carousel(props: PropsWithChildren<CarouselProps>) {
-  const { defaultIndex, height, autoplayDelay, delay, children } = props;
+  const {
+    defaultIndex,
+    height,
+    autoplayDelay,
+    delay,
+    children,
+    animationDelay,
+    autoplay,
+    autoplayReverse,
+    radioAppear,
+    touchDiff = 50
+  } = props;
   //设置需要展示的元素
   const [state, setState] = useState<ReactNode[]>([]);
   //设置显示索引用
@@ -121,6 +168,7 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
     setState(res);
     setIndexMap(map);
   }, [defaultIndex, props.children, totalLen]);
+  
   useEffect(() => {
     let child = children as ReactElement[];
     let timer: number;
@@ -151,7 +199,9 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
     }
     return () => window.clearTimeout(timer);
   }, [delay, indexMap, children]);
+  
   const ref = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
     const setBoundFunc = () => {
       if (ref.current) {
@@ -168,15 +218,52 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
       window.removeEventListener("resize", resizefunc);
     };
   }, []);
+  
+  useEffect(() => {
+    let timer: number;
+    if (autoplay) {
+			timer = window.setTimeout(() => {
+				toMove(!autoplayReverse!, totalLen, indexMap, setIndexMap);
+			}, autoplayDelay);
+		}
+    return () => window.clearTimeout(timer);
+  }, [autoplay, autoplayDelay, indexMap, totalLen, autoplayReverse]);
+  // for mobile device
+  const [start, setStart] = useState(0);
+	const touchStart = (e: TouchEvent<HTMLDivElement>) => {
+		setStart(e.touches[0].clientX);
+	};
+	const touchEnd = (e: TouchEvent<HTMLDivElement>) => {
+		let end = e.changedTouches[0].clientX;
+		let val = end - start;
+		let abs = Math.abs(val);
+		if (abs > touchDiff!) {
+			//说明可以进一步判断
+			if (val > 0) {
+				//从左往右 向左翻
+				toMove(false, totalLen, indexMap, setIndexMap);
+			} else {
+				toMove(true, totalLen, indexMap, setIndexMap);
+			}
+		}
+	};
   return (
     <div ref={ref}>
       <div
         className="viewport"
-        style={{ width: `100%`, height: `${height!}px` }}
+        style={{
+          width: `100%`,
+          height: `${height!}px`,
+          overflow: "hidden",
+          position: "relative"
+        }}
+        onTouchStart={touchStart}
+        onTouchEnd={touchEnd}
       >
         <Transition
           animatein={animation.animatein}
           direction={animation.direction}
+          delay={animationDelay!}
         >
           <div
             style={{
@@ -211,6 +298,7 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
           return (
             <Radio
               label=""
+              appearance={radioAppear}
               key={y}
               hideLabel
               value={0}

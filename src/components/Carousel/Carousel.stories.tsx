@@ -47,16 +47,15 @@ export const knobsCarousel = () => {
 		<Carousel
 			delay={number("delay", 300)}
 			height={height}
-			// radioAppear={select(
-			// 	"radioAppear",
-			// 	Object.keys(color) as Array<keyof typeof color>,
-			// 	"primary"
-			// )}
+			radioAppear={select(
+				"radioAppear",
+				Object.keys(color) as Array<keyof typeof color>,
+				"primary"
+			)}
 			defaultIndex={number("defaultIndex", 0)}
 			autoplay={boolean("autoplay", true)}
-			// viewportBoxshadow={text("viewportBoxshadow", "2px 2px 4px #d9d9d9")}
-			// autoplayReverse={boolean("autoplayReverse", false)}
-			// animationDelay={number("animationDelay", 500)}
+			autoplayReverse={boolean("autoplayReverse", false)}
+			animationDelay={number("animationDelay", 500)}
 			autoplayDelay={number("autoplayDelay", 5000)}
 		>
 			{new Array(num).fill(height).map((v, i) => DivExample(v, i))}
