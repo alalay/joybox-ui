@@ -6,12 +6,11 @@ import React, {
   useEffect,
   ReactElement,
   useState,
-  TouchEvent,
+  TouchEvent
 } from "react";
 import styled from "styled-components";
 import { Radio } from "../Radio";
 import { color } from "../shared/styles";
-
 
 interface AnimationType {
   animatein: boolean;
@@ -19,32 +18,43 @@ interface AnimationType {
 }
 interface TransitionType extends AnimationType {
   delay: number;
+  width: number;
 }
+
+interface WrapperProps {
+  viewportBoxshadow: string;
+}
+
+const Wrapper = styled.div<WrapperProps>`
+  box-shadow: ${props => props.viewportBoxshadow};
+  padding: 10px;
+  border-radius: 5px;
+`;
 const Transition = styled.div<TransitionType>`
-	${props =>
-    !props.animatein &&
-    props.direction === "left" &&
-    `
-		transform: translateX(100%);
+	${(props) =>
+		!props.animatein &&
+		props.direction === "left" &&
+		`
+		transform: translateX(${props.width}px);
 		`}
-	${props =>
-    !props.animatein &&
-    props.direction === "right" &&
-    `
-		transform: translateX(-100%);
+	${(props) =>
+		!props.animatein &&
+		props.direction === "right" &&
+		`
+		transform: translateX(${-props.width}px);
 	
 		`}
-	${props =>
-    props.animatein &&
-    props.direction === "left" &&
-    `
+	${(props) =>
+		props.animatein &&
+		props.direction === "left" &&
+		`
 		transform: translateX(0);
 			transition: all ${props.delay / 1000}s ease;
 		`}
-	${props =>
-    props.animatein &&
-    props.direction === "right" &&
-    `
+	${(props) =>
+		props.animatein &&
+		props.direction === "right" &&
+		`
 		transform: translateX(0);
 		transition: all ${props.delay / 1000}s ease;
 		`}
@@ -68,6 +78,8 @@ type CarouselProps = {
   radioAppear?: keyof typeof color;
   /** touch diff */
   touchDiff?: number;
+  /** wrapper shadow box */
+  viewportBoxshadow?: string;
 };
 
 function currentSetMap(
@@ -135,7 +147,8 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
     autoplay,
     autoplayReverse,
     radioAppear,
-    touchDiff = 50
+    touchDiff = 50,
+    viewportBoxshadow
   } = props;
   //设置需要展示的元素
   const [state, setState] = useState<ReactNode[]>([]);
@@ -168,7 +181,7 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
     setState(res);
     setIndexMap(map);
   }, [defaultIndex, props.children, totalLen]);
-  
+
   useEffect(() => {
     let child = children as ReactElement[];
     let timer: number;
@@ -199,9 +212,9 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
     }
     return () => window.clearTimeout(timer);
   }, [delay, indexMap, children]);
-  
+
   const ref = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const setBoundFunc = () => {
       if (ref.current) {
@@ -218,37 +231,37 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
       window.removeEventListener("resize", resizefunc);
     };
   }, []);
-  
+
   useEffect(() => {
     let timer: number;
     if (autoplay) {
-			timer = window.setTimeout(() => {
-				toMove(!autoplayReverse!, totalLen, indexMap, setIndexMap);
-			}, autoplayDelay);
-		}
+      timer = window.setTimeout(() => {
+        toMove(!autoplayReverse!, totalLen, indexMap, setIndexMap);
+      }, autoplayDelay);
+    }
     return () => window.clearTimeout(timer);
   }, [autoplay, autoplayDelay, indexMap, totalLen, autoplayReverse]);
   // for mobile device
   const [start, setStart] = useState(0);
-	const touchStart = (e: TouchEvent<HTMLDivElement>) => {
-		setStart(e.touches[0].clientX);
-	};
-	const touchEnd = (e: TouchEvent<HTMLDivElement>) => {
-		let end = e.changedTouches[0].clientX;
-		let val = end - start;
-		let abs = Math.abs(val);
-		if (abs > touchDiff!) {
-			//说明可以进一步判断
-			if (val > 0) {
-				//从左往右 向左翻
-				toMove(false, totalLen, indexMap, setIndexMap);
-			} else {
-				toMove(true, totalLen, indexMap, setIndexMap);
-			}
-		}
-	};
+  const touchStart = (e: TouchEvent<HTMLDivElement>) => {
+    setStart(e.touches[0].clientX);
+  };
+  const touchEnd = (e: TouchEvent<HTMLDivElement>) => {
+    let end = e.changedTouches[0].clientX;
+    let val = end - start;
+    let abs = Math.abs(val);
+    if (abs > touchDiff!) {
+      //说明可以进一步判断
+      if (val > 0) {
+        //从左往右 向左翻
+        toMove(false, totalLen, indexMap, setIndexMap);
+      } else {
+        toMove(true, totalLen, indexMap, setIndexMap);
+      }
+    }
+  };
   return (
-    <div ref={ref}>
+    <Wrapper ref={ref} viewportBoxshadow={viewportBoxshadow}>
       <div
         className="viewport"
         style={{
@@ -264,6 +277,7 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
           animatein={animation.animatein}
           direction={animation.direction}
           delay={animationDelay!}
+          width={200}
         >
           <div
             style={{
@@ -312,7 +326,7 @@ export function Carousel(props: PropsWithChildren<CarouselProps>) {
           );
         })}
       </ul>
-    </div>
+    </Wrapper>
   );
 }
 Carousel.defaultProps = {

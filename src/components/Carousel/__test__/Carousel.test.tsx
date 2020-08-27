@@ -1,6 +1,6 @@
 import React from "react";
 import { fireEvent, act, render as trender } from "@testing-library/react";
-import { Carousel } from "../index";
+import Carousel from "../index";
 import { render, unmountComponentAtNode } from "react-dom";
 
 const testAutoplay = function() {

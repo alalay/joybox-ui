@@ -15,6 +15,7 @@ export default {
 	decorators: [withKnobs],
 };
 
+
 const DivExample = function(height: number, index: number) {
 	return (
 		<div
@@ -57,6 +58,7 @@ export const knobsCarousel = () => {
 			autoplayReverse={boolean("autoplayReverse", false)}
 			animationDelay={number("animationDelay", 500)}
 			autoplayDelay={number("autoplayDelay", 5000)}
+			viewportBoxshadow={text("viewportBoxshadow", "2px 2px 4px #d9d9d9")}
 		>
 			{new Array(num).fill(height).map((v, i) => DivExample(v, i))}
 		</Carousel>
