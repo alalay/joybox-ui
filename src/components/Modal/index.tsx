@@ -11,7 +11,7 @@ import styled, { css } from "styled-components";
 import { useStateAnimation, useStopScroll } from "./hooks";
 import Button from "../button";
 import { Icon } from "../icon";
-import { color, typography } from "../shared/styles";
+import { typography } from "../shared/styles";
 
 const ModalWrapper = styled.div`
   position: fixed;
