@@ -124,7 +124,9 @@ export type ModalProps = {
   /** 没点确认于取消，直接关闭的回调 */
   closeCallback?: () => void;
 };
-
+Modal.defaultProps = {
+  container: document.body
+};
 export function Modal(props: PropsWithChildren<ModalProps>) {
   const {
     visible,
