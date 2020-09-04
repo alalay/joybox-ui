@@ -9,7 +9,7 @@ import React, {
 import { createPortal } from "react-dom";
 import styled, { css } from "styled-components";
 import { useStateAnimation, useStopScroll } from "./hooks";
-import Button from "../button";
+import Button from "../Button";
 import { Icon } from "../icon";
 import { typography } from "../shared/styles";
 

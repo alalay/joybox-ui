@@ -7,7 +7,7 @@ import {
 	color,
 	select,
 } from "@storybook/addon-knobs";
-import Button from '../button';
+import Button from '../Button';
 import Icon from '../icon';
 
 export default {

@@ -10,7 +10,7 @@ import styled, { css } from "styled-components";
 import { color } from "../shared/styles";
 import { rgba } from "polished";
 import { useStateAnimation } from "../Modal/hooks";
-import Button from "../button";
+import Button from "../Button";
 import { Icon } from "../icon";
 
 type calDataType = [number, number, number];

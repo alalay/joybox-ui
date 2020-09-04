@@ -7,7 +7,7 @@ import {
 	number,
 } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import Button from '../button';
+import Button from '../Button';
 export default {
 	title: "Modal",
 	component: Modal,

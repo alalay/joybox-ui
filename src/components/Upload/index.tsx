@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 import { color, typography } from "../shared/styles";
 import { darken, rgba, opacify } from "polished";
 import { iconSpin } from "../shared/animation";
-import Button from "../button";
+import Button from "../Button";
 import { Progress } from "../Progress";
 import { message } from "../Message";
 import { Icon } from "../icon";
