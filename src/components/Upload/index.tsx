@@ -1,8 +1,13 @@
-import React, { useRef, useState, useMemo, useCallback, ReactNode } from "react";
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  ReactNode
+} from "react";
 import styled, { css } from "styled-components";
 import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 import { color, typography } from "../shared/styles";
-import { darken, rgba, opacify } from "polished";
 import { iconSpin } from "../shared/animation";
 import Button from "../Button";
 import { Progress } from "../Progress";
@@ -96,37 +101,37 @@ const ImgUpload = styled.div`
   }
 `;
 const ProgressListItemName = styled.div<{ status: ProgressBarStatus }>`
-	color: ${(props) => chooseProgressListColor(props.status)};
+  color: ${props => chooseProgressListColor(props.status)};
 `;
 export const IconSpin = styled.span`
 	&>svg{
 		${css`
-			animation: ${iconSpin} 2s linear infinite;
-		`}
+      animation: ${iconSpin} 2s linear infinite;
+    `}
 	}
 }
 `;
 const btnStyle = {
-	padding: "10px",
+  padding: "10px"
 };
 const rotateBtnStyle = {
-	padding: "10px",
-	transform: "rotateY(180deg)",
+  padding: "10px",
+  transform: "rotateY(180deg)"
 };
 
 type ProgressBarStatus = "ready" | "success" | "failed" | "upload";
 
 function chooseProgressListColor(status: ProgressBarStatus) {
-	switch (status) {
-		case "failed":
-			return color.negative;
-		case "ready":
-			return color.warning;
-		case "success":
-			return color.positive;
-		case "upload":
-			return color.secondary;
-	}
+  switch (status) {
+    case "failed":
+      return color.negative;
+    case "ready":
+      return color.warning;
+    case "success":
+      return color.positive;
+    case "upload":
+      return color.secondary;
+  }
 }
 interface UploadListProps {
   flist: ProgressBar[];
@@ -134,43 +139,40 @@ interface UploadListProps {
 }
 
 function UploadList(props: UploadListProps) {
-	const { flist, onRemove } = props;
-	return (
-		<ul style={{ padding: "10px" }}>
-			{flist.map((item) => {
-				return (
-					<ProgressLi key={item.uid}>
-						<ProgressListItem>
-							<ProgressListItemName status={item.status}>
-								{item.filename}
-							</ProgressListItemName>
-							<div>
-								<Button
-									style={{
-										padding: "0",
-										background: "transparent",
-									}}
-									onClick={() => onRemove(item)}
-								>
-									<Icon
-										icon="close"
-										color={chooseProgressListColor(
-											item.status
-										)}
-									></Icon>
-								</Button>
-							</div>
-						</ProgressListItem>
+  const { flist, onRemove } = props;
+  return (
+    <ul style={{ padding: "10px" }}>
+      {flist.map(item => {
+        return (
+          <ProgressLi key={item.uid}>
+            <ProgressListItem>
+              <ProgressListItemName status={item.status}>
+                {item.filename}
+              </ProgressListItemName>
+              <div>
+                <Button
+                  style={{
+                    padding: "0",
+                    background: "transparent"
+                  }}
+                  onClick={() => onRemove(item)}
+                >
+                  <Icon
+                    icon="close"
+                    color={chooseProgressListColor(item.status)}
+                  ></Icon>
+                </Button>
+              </div>
+            </ProgressListItem>
 
-						{(item.status === "upload" ||
-							item.status === "ready") && (
-							<Progress count={item.percent}></Progress>
-						)}
-					</ProgressLi>
-				);
-			})}
-		</ul>
-	);
+            {(item.status === "upload" || item.status === "ready") && (
+              <Progress count={item.percent}></Progress>
+            )}
+          </ProgressLi>
+        );
+      })}
+    </ul>
+  );
 }
 
 interface imageListProps extends UploadListProps {
@@ -356,11 +358,11 @@ type UploadProps = {
   /** input的multiple属性 multiple为true和max冲突*/
   multiple?: boolean;
   /** 用户自定义按钮 */
-	customBtn?:ReactNode;
+  customBtn?: ReactNode;
 };
 type ModalContentType = {
-	rotate: number;
-	times: number;
+  rotate: number;
+  times: number;
   img: HTMLImageElement;
   left: number;
   top: number;
@@ -373,60 +375,60 @@ const getBase64 = (raw: File, callback: Function) => {
   reader.readAsDataURL(raw);
 };
 const cavasDraw = function(
-	modalContent: ModalContentType,
-	canvas: HTMLCanvasElement
+  modalContent: ModalContentType,
+  canvas: HTMLCanvasElement
 ) {
-	const image = modalContent.img;
-	const ctx = canvas.getContext("2d");
-	// eslint-disable-next-line no-self-assign
-	canvas.height = canvas.height; //清屏
-	let imgWidth = image.width;
-	let imgHeight = image.height;
-	//canvas宽高300,判断图片长宽谁长，取长的
-	const times = modalContent.times;
-	if (imgWidth > imgHeight) {
-		//如果宽比高度大
-		let rate = canvas.width / imgWidth;
-		imgWidth = canvas.width * times; //让宽度等于canvas宽度
-		imgHeight = imgHeight * rate * times; //然后让高度等比缩放
-	} else {
-		let rate = canvas.height / imgHeight;
-		imgHeight = canvas.height * times;
-		imgWidth = imgWidth * rate * times;
-	}
-	//此时，长宽已等比例缩放，算起始点位偏移，起始高度就是canvas高-图片高再除2 宽度同理
-	const startX = (canvas.width - imgWidth) / 2;
-	const startY = (canvas.height - imgHeight) / 2;
-	//旋转操作
-	//旋转首先移动原点到图片中心，这里中心是canvas中心,然后再移动回来
-	const midX = canvas.width / 2;
-	const midY = canvas.height / 2;
-	ctx?.translate(midX, midY);
+  const image = modalContent.img;
+  const ctx = canvas.getContext("2d");
+  // eslint-disable-next-line no-self-assign
+  canvas.height = canvas.height; //清屏
+  let imgWidth = image.width;
+  let imgHeight = image.height;
+  //canvas宽高300,判断图片长宽谁长，取长的
+  const times = modalContent.times;
+  if (imgWidth > imgHeight) {
+    //如果宽比高度大
+    let rate = canvas.width / imgWidth;
+    imgWidth = canvas.width * times; //让宽度等于canvas宽度
+    imgHeight = imgHeight * rate * times; //然后让高度等比缩放
+  } else {
+    let rate = canvas.height / imgHeight;
+    imgHeight = canvas.height * times;
+    imgWidth = imgWidth * rate * times;
+  }
+  //此时，长宽已等比例缩放，算起始点位偏移，起始高度就是canvas高-图片高再除2 宽度同理
+  const startX = (canvas.width - imgWidth) / 2;
+  const startY = (canvas.height - imgHeight) / 2;
+  //旋转操作
+  //旋转首先移动原点到图片中心，这里中心是canvas中心,然后再移动回来
+  const midX = canvas.width / 2;
+  const midY = canvas.height / 2;
+  ctx?.translate(midX, midY);
 
-	ctx?.rotate(modalContent.rotate);
+  ctx?.rotate(modalContent.rotate);
   ctx?.drawImage(
-		image,
-		startX - midX + modalContent.left,
-		startY - midY + modalContent.top,
-		imgWidth,
-		imgHeight
-	);
-	ctx?.translate(0, 0);
+    image,
+    startX - midX + modalContent.left,
+    startY - midY + modalContent.top,
+    imgWidth,
+    imgHeight
+  );
+  ctx?.translate(0, 0);
 };
 const showModalToSlice = function(
-	f: File,
-	canvasRef: React.RefObject<HTMLCanvasElement>,
-	modalContent: ModalContentType
+  f: File,
+  canvasRef: React.RefObject<HTMLCanvasElement>,
+  modalContent: ModalContentType
 ) {
-	getBase64(f, (s: string) => {
-		const canvas = canvasRef.current;
-		if (canvas) {
-			modalContent.img.src = s;
-			modalContent.img.onload = () => {
-				cavasDraw(modalContent, canvas);
-			};
-		}
-	});
+  getBase64(f, (s: string) => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      modalContent.img.src = s;
+      modalContent.img.onload = () => {
+        cavasDraw(modalContent, canvas);
+      };
+    }
+  });
 };
 export function Upload(props: UploadProps) {
   const {
@@ -444,21 +446,21 @@ export function Upload(props: UploadProps) {
     customRemove,
     multiple,
     accept,
-    customBtn,
+    customBtn
   } = props;
   const [flist, setFlist] = useState<ProgressBar[]>(defaultProgressBar || []);
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ModalContentType>({
-		rotate: 0,
-		times: 1,
-		img: new Image(),
-		left: 0,
-		top: 0,
-	});
-	const [mouseActive, setMouseActive] = useState(false);
-	const [startXY, setStartXY] = useState({ X: 0, Y: 0 });
+    rotate: 0,
+    times: 1,
+    img: new Image(),
+    left: 0,
+    top: 0
+  });
+  const [mouseActive, setMouseActive] = useState(false);
+  const [startXY, setStartXY] = useState({ X: 0, Y: 0 });
   const [rescallback, setResCallback] = useState<{ restfn: Function }>({
     restfn: () => {}
   });
@@ -467,59 +469,59 @@ export function Upload(props: UploadProps) {
     if (e.target.files && e.target.files.length <= 0) return;
     let filelist = Array.from(e.target.files);
     filelist.forEach((f, i) => {
-			//裁剪会改变file
-			const restfn = (f: File) => {
-				if (beforeUpload) {
-					const p = beforeUpload(f, i);
-					if (p instanceof Promise) {
-						p.then((res: File) => {
-							postData(
-								res,
-								resolveFilename(uploadFilename, i),
-								axiosConfig!,
-								i,
-								onProgress,
-								setFlist,
-								successCallback,
-								failCallback
-							);
-						});
-					} else {
-						if (p) {
-							//false不执行
-							postData(
-								f,
-								resolveFilename(uploadFilename, i),
-								axiosConfig!,
-								i,
-								onProgress,
-								setFlist,
-								successCallback,
-								failCallback
-							);
-						}
-					}
-				} else {
-					postData(
-						f,
-						resolveFilename(uploadFilename, i),
-						axiosConfig!,
-						i,
-						onProgress,
-						setFlist,
-						successCallback,
-						failCallback
-					);
-				}
-			};
-			setResCallback({ restfn });
-			if (showSlice) {
-				setModalOpen(true);
-				showModalToSlice(f, canvasRef, modalContent);
-			} else {
-				restfn(f);
-			}
-		});
+      //裁剪会改变file
+      const restfn = (f: File) => {
+        if (beforeUpload) {
+          const p = beforeUpload(f, i);
+          if (p instanceof Promise) {
+            p.then((res: File) => {
+              postData(
+                res,
+                resolveFilename(uploadFilename, i),
+                axiosConfig!,
+                i,
+                onProgress,
+                setFlist,
+                successCallback,
+                failCallback
+              );
+            });
+          } else {
+            if (p) {
+              //false不执行
+              postData(
+                f,
+                resolveFilename(uploadFilename, i),
+                axiosConfig!,
+                i,
+                onProgress,
+                setFlist,
+                successCallback,
+                failCallback
+              );
+            }
+          }
+        } else {
+          postData(
+            f,
+            resolveFilename(uploadFilename, i),
+            axiosConfig!,
+            i,
+            onProgress,
+            setFlist,
+            successCallback,
+            failCallback
+          );
+        }
+      };
+      setResCallback({ restfn });
+      if (showSlice) {
+        setModalOpen(true);
+        showModalToSlice(f, canvasRef, modalContent);
+      } else {
+        restfn(f);
+      }
+    });
   };
   const handleClick = () => {
     inputRef.current?.click();
@@ -563,32 +565,28 @@ export function Upload(props: UploadProps) {
       return false;
     }
   }, [multiple, uploadMode]);
-  const handleMouseDown = (
-		e: React.MouseEvent<HTMLDivElement, MouseEvent>
-	) => {
-		setMouseActive(true);
-		setStartXY({
-			X: e.clientX - modalContent.left,
-			Y: e.clientY - modalContent.top,
-		});
-	};
-	const handleMouseMove = (
-		e: React.MouseEvent<HTMLDivElement, MouseEvent>
-	) => {
-		if (mouseActive) {
-			let diffX = e.clientX - startXY.X;
-			let diffY = e.clientY - startXY.Y;
-			let newContent = { ...modalContent, left: diffX, top: diffY };
-			setModalContent(newContent);
-			cavasDraw(newContent, canvasRef.current!);
-		}
-	};
-	const handleMouseUp = () => {
-		setMouseActive(false);
-	};
-	const handleMouseLeave = () => {
-		setMouseActive(false);
-	};
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setMouseActive(true);
+    setStartXY({
+      X: e.clientX - modalContent.left,
+      Y: e.clientY - modalContent.top
+    });
+  };
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (mouseActive) {
+      let diffX = e.clientX - startXY.X;
+      let diffY = e.clientY - startXY.Y;
+      let newContent = { ...modalContent, left: diffX, top: diffY };
+      setModalContent(newContent);
+      cavasDraw(newContent, canvasRef.current!);
+    }
+  };
+  const handleMouseUp = () => {
+    setMouseActive(false);
+  };
+  const handleMouseLeave = () => {
+    setMouseActive(false);
+  };
   return (
     <div>
       <input
@@ -601,19 +599,19 @@ export function Upload(props: UploadProps) {
         accept={accept}
       ></input>
       {shouldShow && uploadMode === "default" && (
-				<span onClick={handleClick}>
-					{customBtn ? (
-						customBtn
-					) : (
-						<Button
-							isLoading={resolveBtnLoading(flist)}
-							loadingText="上传中..."
-						>
-							upload
-						</Button>
-					)}
-				</span>
-			)}
+        <span onClick={handleClick}>
+          {customBtn ? (
+            customBtn
+          ) : (
+            <Button
+              isLoading={resolveBtnLoading(flist)}
+              loadingText="上传中..."
+            >
+              upload
+            </Button>
+          )}
+        </span>
+      )}
       {shouldShow && uploadMode === "img" && (
         <ImgUpload onClick={handleClick}>
           <Icon icon="plus"></Icon>
@@ -630,120 +628,121 @@ export function Upload(props: UploadProps) {
         ></ImageList>
       )}
       <Modal
-				title="图片裁剪"
-				callback={(v: boolean) => {
-					if (v) {
-						//如果取消，不执行后续上传
-						canvasRef.current!.toBlob(function(blob) {
-							if (rescallback.restfn) rescallback.restfn(blob);
-						});
-					}
-					//清除旋转和倍数
-					setModalContent({ ...modalContent, rotate: 0, times: 1 });
-				}}
-				maskClose={false}
-				closeButton={false}
-				visible={modalOpen}
-				parentSetState={setModalOpen}
-			>
-				<div
-					onMouseDown={handleMouseDown}
-					onMouseMove={handleMouseMove}
-					onMouseUp={handleMouseUp}
-				>
-					<canvas
-						width={300}
-						height={300}
-						style={{
-							width: "100%",
-							height: "100%",
-							border: "1px dashed #ff4785",
-						}}
-						ref={canvasRef}
-					>
-						　您的浏览器不支持Canvas
-					</canvas>
-				</div>
+        title="图片裁剪"
+        callback={(v: boolean) => {
+          if (v) {
+            //如果取消，不执行后续上传
+            canvasRef.current!.toBlob(function(blob) {
+              if (rescallback.restfn) rescallback.restfn(blob);
+            });
+          }
+          //清除旋转和倍数
+          setModalContent({ ...modalContent, rotate: 0, times: 1 });
+        }}
+        maskClose={false}
+        closeButton={false}
+        visible={modalOpen}
+        parentSetState={setModalOpen}
+      >
+        <div
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+        >
+          <canvas
+            width={300}
+            height={300}
+            style={{
+              width: "100%",
+              height: "100%",
+              border: "1px dashed #ff4785"
+            }}
+            ref={canvasRef}
+          >
+            　您的浏览器不支持Canvas
+          </canvas>
+        </div>
         <div style={{ marginTop: "10px" }}>
-					<Button
-						appearance="primary"
-						style={btnStyle}
-						onClick={() => {
-							let newContent = {
-								...modalContent,
-								...{ times: modalContent.times + 0.1 },
-							};
-							setModalContent(newContent);
-							cavasDraw(newContent, canvasRef.current!);
-						}}
-					>
-						<Icon icon="zoom" color={color.light}></Icon>
-					</Button>
-					<Button
-						appearance="primary"
-						style={btnStyle}
-						onClick={() => {
-							let newContent = {
-								...modalContent,
-								...{ times: modalContent.times - 0.1 },
-							};
-							setModalContent(newContent);
-							cavasDraw(newContent, canvasRef.current!);
-						}}
-					>
-						<Icon icon="zoomout" color={color.light}></Icon>
-					</Button>
-					<Button
-						appearance="primary"
-						style={btnStyle}
-						onClick={() => {
-							let newContent = {
-								...modalContent,
-								...{ rotate: modalContent.rotate - 0.1 },
-							};
-							setModalContent(newContent);
-							cavasDraw(newContent, canvasRef.current!);
-						}}
-					>
-						<Icon icon="undo" color={color.light}></Icon>
-					</Button>
-					<Button
-						appearance="primary"
-						style={rotateBtnStyle}
-						onClick={() => {
-							let newContent = {
-								...modalContent,
-								...{ rotate: modalContent.rotate + 0.1 },
-							};
-							setModalContent(newContent);
-							cavasDraw(newContent, canvasRef.current!);
-						}}
-					>
-						<Icon icon="undo" color={color.light}></Icon>
-					</Button>
-					<Button
-						appearance="primary"
-						style={btnStyle}
-						onClick={() => {
-							let newContent = {
-								...modalContent,
-								rotate: 0,
-								times: 1,
-								left: 0,
-								top: 0,
-							};
-							setModalContent(newContent);
-							cavasDraw(newContent, canvasRef.current!);
-						}}
-					>
-						<Icon icon="zoomreset" color={color.light}></Icon>
-					</Button>
-				</div></Modal>
+          <Button
+            appearance="primary"
+            style={btnStyle}
+            onClick={() => {
+              let newContent = {
+                ...modalContent,
+                ...{ times: modalContent.times + 0.1 }
+              };
+              setModalContent(newContent);
+              cavasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="zoom" color={color.light}></Icon>
+          </Button>
+          <Button
+            appearance="primary"
+            style={btnStyle}
+            onClick={() => {
+              let newContent = {
+                ...modalContent,
+                ...{ times: modalContent.times - 0.1 }
+              };
+              setModalContent(newContent);
+              cavasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="zoomout" color={color.light}></Icon>
+          </Button>
+          <Button
+            appearance="primary"
+            style={btnStyle}
+            onClick={() => {
+              let newContent = {
+                ...modalContent,
+                ...{ rotate: modalContent.rotate - 0.1 }
+              };
+              setModalContent(newContent);
+              cavasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="undo" color={color.light}></Icon>
+          </Button>
+          <Button
+            appearance="primary"
+            style={rotateBtnStyle}
+            onClick={() => {
+              let newContent = {
+                ...modalContent,
+                ...{ rotate: modalContent.rotate + 0.1 }
+              };
+              setModalContent(newContent);
+              cavasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="undo" color={color.light}></Icon>
+          </Button>
+          <Button
+            appearance="primary"
+            style={btnStyle}
+            onClick={() => {
+              let newContent = {
+                ...modalContent,
+                rotate: 0,
+                times: 1,
+                left: 0,
+                top: 0
+              };
+              setModalContent(newContent);
+              cavasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="zoomreset" color={color.light}></Icon>
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
 Upload.defaultProps = {
-  uploadMode: 'default',
+  uploadMode: "default",
   axiosConfig: {},
   uploadFilename: "avatar",
   successCallback: () => message.success("上传成功"),
