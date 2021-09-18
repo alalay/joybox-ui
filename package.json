@@ -1,6 +1,6 @@
 {
   "name": "@alalay/joybox-ui",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "private": false,
   "repository": "https://github.com/alalay/joybox-ui",
   "dependencies": {
@@ -92,6 +92,7 @@
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "publishConfig": {
+    "cache": "cache/.npm",
     "registry": "https://npm.pkg.github.com/@alalay"
   }
 }
