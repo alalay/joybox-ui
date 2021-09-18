@@ -30,7 +30,7 @@
     "postinstall": "patch-package"
   },
   "resolutions": {
-    "react-docgen-typescript": "1.20.3"
+    "react-docgen-typescript": "1.22.0"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -29,7 +29,7 @@ const IconWrapper = styled.span`
 
 const BtnDiv = styled.div`
   display: flex;
-  jutify-content: center;
+  justify-content: center;
   align-items: center;
   height: 24px;
   line-height: 24px;
